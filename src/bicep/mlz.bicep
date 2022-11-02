@@ -708,19 +708,6 @@ var spokes = [
   }
 ]
 
-// VNETS
-
-var spokeVirtualNetworks = [for spoke in spokes: {
-  subscriptionId: spoke.subscriptionId
-  resourceGroup: spoke.resourceGroupName
-  name: spoke.virtualNetworkName }]
-var hubVirtualNetwork = [ {
-    subscriptionId: hubSubscriptionId
-    resourceGroup: hubResourceGroup
-    name: hubVirtualNetworkName
-  } ]
-var allVirtualNetworks = concat(hubVirtualNetwork, spokeVirtualNetworks)
-
 // TAGS
 
 var defaultTags = {
@@ -928,11 +915,33 @@ module azurePrivateDns './modules/private-dns.bicep' = {
   name: 'azure-private-dns'
   scope: resourceGroup(hubSubscriptionId, hubResourceGroupName)
   params: {
-    vnetsToLink: allVirtualNetworks
+    vnetsToLink: [ 
+      {
+        subscriptionId: hubSubscriptionId
+        resourceGroup: hubResourceGroupName
+        name: hubVirtualNetworkName
+      }
+      {
+        subscriptionId: identitySubscriptionId
+        resourceGroup: identityResourceGroupName
+        name: identityVirtualNetworkName
+      }
+      {
+        subscriptionId: operationsSubscriptionId
+        resourceGroup: operationsResourceGroupName
+        name: operationsVirtualNetworkName
+      }
+      {
+        subscriptionId: sharedServicesSubscriptionId
+        resourceGroup: sharedServicesResourceGroupName
+        name: sharedServicesVirtualNetworkName
+      }
+    ]
     tags: tags
   }
   dependsOn: [
     hubNetwork
+    spokeNetworks
   ]
 }
 
