@@ -1,4 +1,4 @@
-# Azure IaaS DNS Forwarders example
+# Azure IaaS Active Directory Domain Controllers Example
 
 This example deploys Active Directory Domain Controller Virtual Machines in the MLZ identity tier. There is the option to add the domain controllers to an existing domain, or create a brand new forest.
 
